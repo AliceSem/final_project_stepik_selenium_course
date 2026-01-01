@@ -19,12 +19,13 @@ class ProductPage(BasePage):
 
     def should_be_success_message(self):
         assert self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE), "Success message is not present"
-        self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE).click()
 
     def should_be_product_in_basket(self, product_name, product_price):
-        success_message = self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE).text
-        assert product_name in success_message, "Product name in success message does not match"
-        assert product_price in success_message, "Product price in success message does not match"
-        self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE).click()
+        strong_text = self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE_PRODUCT_NAME).text
+        assert strong_text == product_name, (f"Expected product name '{product_name}', "f"but got '{strong_text}' in success message")
+
+        basket_total = self.browser.find_element(*ProductPageLocators.BASKET_TOTAL).text.replace('\xa0', ' ')
+        assert basket_total == product_price, (f"Basket total ({basket_total}) does not match product price ({product_price})")
+
     def solve_quiz_and_get_code(self):
         super().solve_quiz_and_get_code()
